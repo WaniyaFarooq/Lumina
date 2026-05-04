@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina — Intelligent Study Companion</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Lumi<span>na</span></a>
+  <div class="nav-links">
+    <a href="/explain" class="nav-link">Explainer</a>
+    <a href="/mcq"     class="nav-link">MCQ Gen</a>
+    <a href="/summarize" class="nav-link">Summarize</a>
+    <a href="/quiz"    class="nav-link">Quiz</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Intelligent Study Companion</div>
+  <h1>
+    Learn anything,<br>
+    <em>deeply.</em>
+  </h1>
+  <p class="hero-sub">Explain topics, generate practice questions, condense your notes, and test yourself — all in one quiet, focused space.</p>
+</div>
+
+<div class="cards">
+
+  <a href="/explain" class="card"
+     style="--card-accent: var(--amber); --card-dim: var(--amber-dim);">
+    <span class="card-num">01</span>
+    <div class="card-icon">💡</div>
+    <h3>Topic Explainer</h3>
+    <p>Get a clear, level-matched explanation of any concept — with examples.</p>
+  </a>
+
+  <a href="/mcq" class="card"
+     style="--card-accent: var(--slate); --card-dim: var(--slate-dim);">
+    <span class="card-num">02</span>
+    <div class="card-icon" style="background: var(--slate-dim);">📝</div>
+    <h3>MCQ Generator</h3>
+    <p>Generate targeted practice questions on any subject for exam prep.</p>
+  </a>
+
+  <a href="/summarize" class="card"
+     style="--card-accent: var(--mauve); --card-dim: var(--mauve-dim);">
+    <span class="card-num">03</span>
+    <div class="card-icon" style="background: var(--mauve-dim);">📋</div>
+    <h3>Notes Summarizer</h3>
+    <p>Paste your notes and receive a clean, structured summary instantly.</p>
+  </a>
+
+  <a href="/quiz" class="card"
+     style="--card-accent: var(--forest); --card-dim: var(--forest-dim);">
+    <span class="card-num">04</span>
+    <div class="card-icon" style="background: var(--forest-dim);">🎯</div>
+    <h3>Quiz Mode</h3>
+    <p>Test yourself with a scored interactive quiz on any topic you choose.</p>
+  </a>
+
+</div>
+
+</body>
+</html>
