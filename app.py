@@ -10,13 +10,23 @@ load_dotenv()
 app = Flask(__name__)
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
  
+import re
+
 def ask_ai(prompt):
     chat = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
         model="llama-3.3-70b-versatile",
     )
-    return chat.choices[0].message.content
- 
+
+    text = chat.choices[0].message.content
+
+    # Convert **bold**
+    text = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", text)
+
+    # Convert line breaks
+    text = text.replace("\n", "<br>")
+
+    return text
 # ─── Home Page ───────────────────────────────────────────────
 @app.route("/")
 def index():
