@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topic Explainer — Lumina</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Lumi<span>na</span></a>
+  <div class="nav-links">
+    <a href="/explain"   class="nav-link active">Explainer</a>
+    <a href="/mcq"       class="nav-link">MCQ Gen</a>
+    <a href="/summarize" class="nav-link">Summarize</a>
+    <a href="/quiz"      class="nav-link">Quiz</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <span class="page-tag" style="color: var(--amber);">Feature 01</span>
+    <h1>Topic Explainer</h1>
+    <p>Enter any concept and get a clear, example-driven explanation tailored to your level.</p>
+  </div>
+
+  <div class="form-card">
+    <form method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Topic</label>
+          <input type="text" name="topic"
+                 placeholder="e.g. Recursion, Neural Networks, Photosynthesis…"
+                 value="{{ topic }}" required>
+        </div>
+        <div class="form-group">
+          <label>Level</label>
+          <select name="level">
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn amber">Explain →</button>
+    </form>
+  </div>
+
+  {% if result %}
+  <div class="result-box">
+    <div class="result-header">
+      <div class="result-label">
+        <span class="dot" style="background: var(--amber);"></span>
+        Explanation
+      </div>
+    </div>
+    <div class="result-content">{{ result }}</div>
+  </div>
+  {% endif %}
+
+</div>
+
+</body>
+</html>

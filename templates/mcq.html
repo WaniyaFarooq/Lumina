@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCQ Generator — Lumina</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Lumi<span>na</span></a>
+  <div class="nav-links">
+    <a href="/explain"   class="nav-link">Explainer</a>
+    <a href="/mcq"       class="nav-link active">MCQ Gen</a>
+    <a href="/summarize" class="nav-link">Summarize</a>
+    <a href="/quiz"      class="nav-link">Quiz</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <span class="page-tag" style="color: var(--slate);">Feature 02</span>
+    <h1>MCQ Generator</h1>
+    <p>Generate targeted multiple-choice questions on any subject to sharpen your exam preparation.</p>
+  </div>
+
+  <div class="form-card">
+    <form method="POST">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Topic</label>
+          <input type="text" name="topic"
+                 placeholder="e.g. Object-Oriented Programming, Thermodynamics…"
+                 value="{{ topic }}" required>
+        </div>
+        <div class="form-group">
+          <label>Number of Questions</label>
+          <select name="num">
+            <option value="3">3 Questions</option>
+            <option value="5" selected>5 Questions</option>
+            <option value="10">10 Questions</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn slate">Generate MCQs →</button>
+    </form>
+  </div>
+
+  {% if result %}
+  <div class="result-box">
+    <div class="result-header">
+      <div class="result-label">
+        <span class="dot" style="background: var(--slate);"></span>
+        Generated Questions
+      </div>
+    </div>
+    <div class="result-content">{{ result }}</div>
+  </div>
+  {% endif %}
+
+</div>
+
+</body>
+</html>

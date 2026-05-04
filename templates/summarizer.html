@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes Summarizer — Lumina</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Lumi<span>na</span></a>
+  <div class="nav-links">
+    <a href="/explain"   class="nav-link">Explainer</a>
+    <a href="/mcq"       class="nav-link">MCQ Gen</a>
+    <a href="/summarize" class="nav-link active">Summarize</a>
+    <a href="/quiz"      class="nav-link">Quiz</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <span class="page-tag" style="color: var(--mauve);">Feature 03</span>
+    <h1>Notes Summarizer</h1>
+    <p>Paste your lecture notes or any text and receive a clean, structured summary.</p>
+  </div>
+
+  <div class="form-card">
+    <form method="POST">
+      <div class="form-group">
+        <label>Your Notes</label>
+        <textarea name="notes"
+                  placeholder="Paste your lecture notes, textbook passages, or any content here…"
+                  required>{{ notes }}</textarea>
+      </div>
+      <button type="submit" class="btn mauve">Summarize →</button>
+    </form>
+  </div>
+
+  {% if result %}
+  <div class="result-box">
+    <div class="result-header">
+      <div class="result-label">
+        <span class="dot" style="background: var(--mauve);"></span>
+        Summary
+      </div>
+    </div>
+    <div class="result-content">{{ result }}</div>
+  </div>
+  {% endif %}
+
+</div>
+
+</body>
+</html>

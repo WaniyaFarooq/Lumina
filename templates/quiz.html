@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Mode — Lumina</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Lumi<span>na</span></a>
+  <div class="nav-links">
+    <a href="/explain"   class="nav-link">Explainer</a>
+    <a href="/mcq"       class="nav-link">MCQ Gen</a>
+    <a href="/summarize" class="nav-link">Summarize</a>
+    <a href="/quiz"      class="nav-link active">Quiz</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <span class="page-tag" style="color: var(--forest);">Feature 04</span>
+    <h1>Quiz Mode</h1>
+    <p>Test your knowledge with a scored interactive quiz. See exactly how much you know.</p>
+  </div>
+
+  <!-- ── Setup Screen ── -->
+  <div id="setup-screen">
+    <div class="quiz-setup">
+      <div class="quiz-setup-title">Start a Quiz</div>
+      <p class="quiz-setup-sub">Choose a topic and difficulty to begin</p>
+
+      <div class="form-group">
+        <label>Topic</label>
+        <input type="text" id="quiz-topic"
+               placeholder="e.g. Python OOP, Linear Algebra, World War II…">
+      </div>
+      <div class="form-group">
+        <label>Number of Questions</label>
+        <select id="quiz-num">
+          <option value="3">3 Questions — Quick</option>
+          <option value="5" selected>5 Questions — Standard</option>
+          <option value="10">10 Questions — Full</option>
+        </select>
+      </div>
+      <button class="btn forest" style="width:100%; margin-top: 0.5rem;"
+              onclick="startQuiz()">Begin Quiz →</button>
+    </div>
+  </div>
+
+  <!-- ── Loading ── -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Crafting your quiz…</p>
+  </div>
+
+  <!-- ── Quiz Arena ── -->
+  <div id="quiz-arena">
+
+    <div class="quiz-meta">
+      <span id="q-counter">Question 1 of 5</span>
+      <span class="score-live" id="q-score-live">Score: 0</span>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+
+    <div class="question-card">
+      <span class="q-num" id="q-num-label">Question 01</span>
+      <div class="question-text" id="question-text"></div>
+      <div class="options-grid" id="options-grid"></div>
+    </div>
+
+    <button class="btn forest" id="next-btn"
+            style="display:none; margin-top: 0.25rem;"
+            onclick="nextQuestion()">Next →</button>
+  </div>
+
+  <!-- ── Score Screen ── -->
+  <div class="score-screen" id="score-screen">
+
+    <div class="score-ring">
+      <div class="score-num" id="final-score">0</div>
+      <div class="score-den" id="final-total">/ 5</div>
+    </div>
+
+    <h2 class="score-title" id="score-title">Quiz Complete!</h2>
+    <p class="score-msg" id="score-msg">Here's how you did</p>
+
+    <div class="score-stats">
+      <div>
+        <div class="stat-val" id="stat-correct" style="color: var(--forest);">0</div>
+        <div class="stat-lbl">Correct</div>
+      </div>
+      <div>
+        <div class="stat-val" id="stat-wrong" style="color: var(--red);">0</div>
+        <div class="stat-lbl">Wrong</div>
+      </div>
+      <div>
+        <div class="stat-val" id="stat-pct" style="color: var(--amber);">0%</div>
+        <div class="stat-lbl">Score</div>
+      </div>
+    </div>
+
+    <button class="btn forest" onclick="resetQuiz()">Try Another Quiz</button>
+
+  </div>
+
+</div><!-- /page -->
+
+<script>
+  let questions = [];
+  let current  = 0;
+  let score    = 0;
+  let answered = false;
+
+  /* ── Start ── */
+  async function startQuiz() {
+    const topic = document.getElementById('quiz-topic').value.trim();
+    const num   = document.getElementById('quiz-num').value;
+
+    if (!topic) {
+      document.getElementById('quiz-topic').focus();
+      return;
+    }
+
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('loading').style.display      = 'block';
+
+    try {
+      const res  = await fetch('/quiz/generate', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ topic, num: parseInt(num) })
+      });
+      const data = await res.json();
+
+      document.getElementById('loading').style.display = 'none';
+
+      if (!data.success) {
+        alert('Error: ' + data.error);
+        document.getElementById('setup-screen').style.display = 'block';
+        return;
+      }
+
+      questions = data.questions;
+      current   = 0;
+      score     = 0;
+      document.getElementById('quiz-arena').style.display = 'block';
+      showQuestion();
+
+    } catch (err) {
+      document.getElementById('loading').style.display      = 'none';
+      document.getElementById('setup-screen').style.display = 'block';
+      alert('Something went wrong. Please try again.');
+    }
+  }
+
+  /* ── Show Question ── */
+  function showQuestion() {
+    answered = false;
+    const q      = questions[current];
+    const total  = questions.length;
+    const labels = ['A', 'B', 'C', 'D'];
+
+    document.getElementById('q-counter').textContent    = `Question ${current + 1} of ${total}`;
+    document.getElementById('q-num-label').textContent  = `Question ${String(current + 1).padStart(2,'0')}`;
+    document.getElementById('q-score-live').textContent = `Score: ${score}`;
+    document.getElementById('progress-fill').style.width = `${(current / total) * 100}%`;
+    document.getElementById('question-text').textContent = q.question;
+    document.getElementById('next-btn').style.display    = 'none';
+
+    const grid = document.getElementById('options-grid');
+    grid.innerHTML = '';
+
+    q.options.forEach((opt, i) => {
+      const btn       = document.createElement('button');
+      btn.className   = 'option-btn';
+      btn.disabled    = false;
+      btn.innerHTML   = `<span class="opt-label">${labels[i]}</span>${opt}`;
+      btn.onclick     = () => selectAnswer(i, q.answer);
+      grid.appendChild(btn);
+    });
+  }
+
+  /* ── Select Answer ── */
+  function selectAnswer(chosen, correct) {
+    if (answered) return;
+    answered = true;
+
+    const btns = document.querySelectorAll('.option-btn');
+    btns.forEach(b => b.disabled = true);
+
+    if (chosen === correct) {
+      btns[chosen].classList.add('correct');
+      score++;
+    } else {
+      btns[chosen].classList.add('wrong');
+      btns[correct].classList.add('correct');
+    }
+
+    document.getElementById('q-score-live').textContent = `Score: ${score}`;
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.style.display  = 'inline-flex';
+    nextBtn.textContent    = current + 1 < questions.length ? 'Next →' : 'See Results →';
+  }
+
+  /* ── Next ── */
+  function nextQuestion() {
+    current++;
+    if (current < questions.length) {
+      showQuestion();
+    } else {
+      showScore();
+    }
+  }
+
+  /* ── Score ── */
+  function showScore() {
+    document.getElementById('quiz-arena').style.display  = 'none';
+    document.getElementById('score-screen').style.display = 'block';
+
+    const total = questions.length;
+    const pct   = Math.round((score / total) * 100);
+
+    document.getElementById('final-score').textContent   = score;
+    document.getElementById('final-total').textContent   = `/ ${total}`;
+    document.getElementById('stat-correct').textContent  = score;
+    document.getElementById('stat-wrong').textContent    = total - score;
+    document.getElementById('stat-pct').textContent      = pct + '%';
+    document.getElementById('progress-fill').style.width = '100%';
+
+    const grades = [
+      [90, '🏆 Excellent',      "Outstanding — you really know this topic."],
+      [70, '✓ Good Job',        "Solid performance. A little more review and you'll ace it."],
+      [50, 'Keep Studying',     "You're getting there — revisit the key ideas."],
+      [0,  'Don\'t Give Up',    "Review the topic and give it another shot."]
+    ];
+
+    const g = grades.find(([threshold]) => pct >= threshold);
+    document.getElementById('score-title').textContent = g[1];
+    document.getElementById('score-msg').textContent   = g[2];
+  }
+
+  /* ── Reset ── */
+  function resetQuiz() {
+    document.getElementById('score-screen').style.display  = 'none';
+    document.getElementById('quiz-topic').value            = '';
+    document.getElementById('setup-screen').style.display  = 'block';
+    document.getElementById('progress-fill').style.width   = '0%';
+  }
+</script>
+
+</body>
+</html>
