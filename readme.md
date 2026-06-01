@@ -40,12 +40,7 @@ It provides interactive learning tools like explanations, quizzes, MCQs, and AI-
    python app.py
    ```
 
-5. Open `http://127.0.0.1:5000` in your browser
 
----
-
-
----
 
 ## Getting a Free Groq API Key
 
@@ -80,14 +75,6 @@ LUMINA/
 ````
 
 
-
-## 🌐 Usage
-
-After running the server:
-
-```
-http://127.0.0.1:5000/
-```
 
 You can:
 
@@ -133,15 +120,6 @@ You can:
 ## 👨‍💻 Author
 
 Built by **Waniya Farooq**
-
----
-
-## 📜 License
-
-This project is open-source and free to use for learning and development purposes.
-
-```
-
 
 
 
