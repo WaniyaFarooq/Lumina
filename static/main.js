@@ -1,8 +1,8 @@
 /* ════════════════════════════════════════
    LUMINA INTERACTIONS — JS ENGINE (FIXED)
 ════════════════════════════════════════ */
-document.querySelector(".result-content").innerHTML =
-  response.replace(/\n/g, "<br>");
+
+document.querySelector(".result-content").innerHTML = response;
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ───────────── CUSTOM CURSOR ───────────── */

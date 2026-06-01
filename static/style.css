@@ -82,7 +82,7 @@ input:focus, textarea:focus {
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-*, *::before { cursor: none !important; }
+*, *::before { cursor: auto !important; }
 
 /* ─── Custom Cursor ─── */
 .cursor-dot {
